@@ -112,7 +112,10 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.0/howto/static-files/
+MEDIA_URL = '/media/' # Static files (CSS, JavaScript, Images)访问图片的 URL 前缀
+MEDIA_ROOT = BASE_DIR / 'media' # https://docs.djangoproject.com/en/6.0/howto/static-files/图片在电脑上的实际存储路径
 
 STATIC_URL = 'static/'
+
+LOGIN_URL = '/login/'           # 未登录时的跳转地址 [cite: 120]
+LOGIN_REDIRECT_URL = '/feed/'    # 登录成功后的跳转地址 [cite: 121]
