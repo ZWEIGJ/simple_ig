@@ -26,3 +26,13 @@ class Follow(models.Model):
 
     class Meta:
         unique_together = ('follower', 'followed') # 约束：不能重复关注 [cite: 164]
+
+# 4 评论模型：存储谁、在什么时候、对哪条帖子说了什么
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __clstr__(self):
+        return f'{self.author.username}: {self.content[:20]}'

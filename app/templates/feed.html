@@ -1,39 +1,69 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-md-8 col-lg-6">
         {% for post in posts %}
-        <div class="card mb-4 shadow-sm">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <span class="fw-bold">{{ post.author.username }}</span>
-
-                {% if post.author != request.user %}
-                    <div class="ms-auto">
-                        {% if post.author.id in following_ids %}
-                            <a href="{% url 'toggle_follow' post.author.id %}" class="btn btn-secondary btn-sm">取消关注</a>
-                        {% else %}
-                            <a href="{% url 'toggle_follow' post.author.id %}" class="btn btn-outline-primary btn-sm">关注TA</a>
-                        {% endif %}
-                    </div>
-                {% endif %}
-            </div>
-            {% if post.image %}
-            <img src="{{ post.image.url }}" class="card-img-top" alt="post image">
-            {% endif %}
-            <div class="card-body">
-                <p class="card-text"><strong>{{ post.author.username }}</strong> {{ post.caption }}</p>
-                <div class="d-flex align-items-center">
-                    <a href="{% url 'toggle_like' post.id %}" class="btn btn-sm {% if request.user in post.likes.all %}btn-danger{% else %}btn-outline-danger{% endif %} me-2">
-                        ❤ {{ post.likes.count }}
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-white d-flex align-items-center">
+                    <img src="https://ui-avatars.com/api/?name={{ post.author.username }}&size=32&background=random&color=fff" 
+                         class="rounded-circle me-2" alt="avatar">
+                    <a href="{% url 'profile' post.author.username %}" class="text-dark fw-bold text-decoration-none">
+                        {{ post.author.username }}
                     </a>
+
+                    {% if post.author != request.user %}
+                        <div class="ms-auto">
+                            {% if post.author.id in following_ids %}
+                                <a href="{% url 'toggle_follow' post.author.id %}" class="btn btn-secondary btn-sm">取消关注</a>
+                            {% else %}
+                                <a href="{% url 'toggle_follow' post.author.id %}" class="btn btn-outline-primary btn-sm">关注TA</a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <img src="{{ post.image.url }}" class="card-img-top" alt="post image">
+
+                <div class="card-body">
+                    <div class="mb-2">
+                        <a href="{% url 'toggle_like' post.id %}" class="text-decoration-none">
+                            <span class="text-danger">❤</span> {{ post.likes.count }} 个赞
+                        </a>
+                    </div>
+
+                    <p class="card-text">
+                        <span class="fw-bold">{{ post.author.username }}</span> {{ post.caption }}
+                    </p>
                     <small class="text-muted">{{ post.created_at|timesince }}前</small>
+
+                    <hr>
+
+                    <div class="comments-list mb-3">
+                        {% for comment in post.comments.all %}
+                            <div class="mb-1" style="font-size: 0.9rem;">
+                                <a href="{% url 'profile' comment.author.username %}" class="fw-bold text-dark text-decoration-none">
+                                    {{ comment.author.username }}
+                                </a>
+                                <span class="ms-1">{{ comment.content }}</span>
+                            </div>
+                        {% empty %}
+                            <small class="text-muted">还没有评论，快来抢沙发！</small>
+                        {% endfor %}
+                    </div>
+
+                    <form action="{% url 'add_comment' post.id %}" method="POST" class="d-flex border-top pt-2">
+                        {% csrf_token %}
+                        <input type="text" name="content" class="form-control form-control-sm border-0 shadow-none" 
+                               placeholder="添加评论..." required>
+                        <button type="submit" class="btn btn-sm btn-link text-primary fw-bold text-decoration-none">发布</button>
+                    </form>
                 </div>
             </div>
-        </div>
         {% empty %}
-        <div class="text-center">
-            <p class="text-muted">还没有人发帖，快去发布第一条动态吧！</p>
-        </div>
+            <div class="text-center py-5">
+                <h3>这里空空如也</h3>
+                <p class="text-muted">去“发现广场”关注一些有趣的人吧！</p>
+            </div>
         {% endfor %}
     </div>
 </div>

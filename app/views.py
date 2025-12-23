@@ -3,8 +3,9 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.db.models import Q
-from .models import Post, Like, Follow, User
+from .models import Post, Like, Follow, User, Comment  
 from .forms import PostForm
+
 
 #用户认证（注册与登录）
 def register(request):
@@ -108,3 +109,17 @@ def explore(request):
         'posts': all_posts,
         'following_ids': following_ids # 传给前端
     })
+
+#评论功能
+@login_required
+def add_comment(request, post_id):
+    if request.method == "POST":
+        post = get_object_or_404(Post, id=post_id)
+        content = request.POST.get('content')
+        if content:
+            Comment.objects.create(
+                post=post,
+                author=request.user,
+                content=content
+            )
+    return redirect(request.META.get('HTTP_REFERER', 'feed'))
