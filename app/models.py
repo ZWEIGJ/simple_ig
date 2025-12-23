@@ -36,3 +36,11 @@ class Comment(models.Model):
 
     def __clstr__(self):
         return f'{self.author.username}: {self.content[:20]}'
+    
+# 5 用户资料扩展模型：为用户添加头像等额外信息
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    avatar = models.ImageField(upload_to='avatars/', default='avatars/default.png')
+
+    def __str__(self):
+        return f'{self.user.username} Profile'

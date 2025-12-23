@@ -3,7 +3,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.db.models import Q
-from .models import Post, Like, Follow, User, Comment  
+from .models import Post, Like, Follow, User, Comment, Profile   
 from .forms import PostForm
 
 
@@ -131,3 +131,18 @@ def delete_comment(request, comment_id):
     if comment.author == request.user:
         comment.delete()
     return redirect(request.META.get('HTTP_REFERER', 'feed'))
+
+# 编辑个人资料（头像等）
+@login_required
+def edit_profile(request):
+    # 使用 get_or_create 确保如果老用户没 Profile，就立刻新建一个
+    profile, created = Profile.objects.get_or_create(user=request.user)
+    
+    if request.method == 'POST':
+        avatar = request.FILES.get('avatar')
+        if avatar:
+            profile.avatar = avatar
+            profile.save()
+            return redirect('profile', username=request.user.username)
+            
+    return render(request, 'edit_profile.html', {'profile': profile})

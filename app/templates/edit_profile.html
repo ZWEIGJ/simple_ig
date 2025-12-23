@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm p-4">
+            <h3 class="mb-4">编辑个人资料</h3>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">上传新头像</label>
+                    <input type="file" name="avatar" class="form-control" accept="image/*">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">保存修改</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
