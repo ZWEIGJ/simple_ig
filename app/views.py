@@ -17,7 +17,6 @@ def register(request):
         form = UserCreationForm()
     return render(request, 'login.html', {'form': form})
 
-#核心展示（Feed 流）
 def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
@@ -29,7 +28,7 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
 
-#内容发布（发帖）
+#核心展示（Feed 流）
 @login_required
 def feed(request):
     # 获取我关注的人的 ID 列表 [cite: 209]
@@ -39,7 +38,7 @@ def feed(request):
     posts = posts.distinct().order_by('-created_at')
     return render(request, 'feed.html', {'posts': posts})
 
-#社交交互（点赞与关注）
+#内容发布（发帖）
 @login_required
 def create_post(request):
     if request.method == 'POST':
@@ -52,3 +51,21 @@ def create_post(request):
     else:
         form = PostForm()
     return render(request, 'post_create.html', {'form': form})
+
+#社交交互（点赞与关注）
+@login_required
+def toggle_like(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    like, created = Like.objects.get_or_create(user=request.user, post=post)
+    if not created:
+        like.delete() # 如果已经点过赞，则取消 [cite: 230]
+    return redirect('feed')
+
+@login_required
+def toggle_follow(request, user_id):
+    target_user = get_object_or_404(User, id=user_id)
+    if request.user != target_user: # 防止自己关注自己 [cite: 235]
+        follow, created = Follow.objects.get_or_create(follower=request.user, followed=target_user)
+        if not created:
+            follow.delete() # 切换关注/取消关注 [cite: 238]
+    return redirect('feed')

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple IG</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'feed' %}">Simple IG</a>
+            <div class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                    <span class="navbar-text me-3">你好, {{ user.username }}</span>
+                    <a class="nav-link btn btn-outline-light btn-sm text-white" href="{% url 'create_post' %}">发布新帖</a>
+                    <a class="nav-link" href="{% url 'login' %}">退出</a>
+                {% else %}
+                    <a class="nav-link" href="{% url 'login' %}">登录</a>
+                    <a class="nav-link" href="{% url 'register' %}">注册</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
