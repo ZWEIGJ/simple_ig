@@ -151,3 +151,13 @@ def edit_profile(request):
             return redirect('profile', username=request.user.username)
             
     return render(request, 'edit_profile.html', {'profile': profile})
+
+# 删除帖子
+@login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    # 安全检查：确保只有作者本人可以删除
+    if post.author == request.user:
+        post.delete()
+    # 删除后返回个人主页
+    return redirect('profile', username=request.user.username)

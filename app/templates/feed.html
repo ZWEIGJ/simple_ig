@@ -4,6 +4,7 @@
     <div class="col-md-8 col-lg-6">
         {% for post in posts %}
             <div class="card mb-4 shadow-sm border-0">
+                
                 <div class="card-header bg-white d-flex align-items-center py-3">
                     <a href="{% url 'profile' post.author.username %}">
                         <img src="{{ post.author.profile.avatar.url }}" 
@@ -12,24 +13,37 @@
                              style="width: 32px; height: 32px; object-fit: cover;">
                     </a>
                     
-                    <a href="{% url 'profile' post.author.username %}" class="text-dark fw-bold text-decoration-none">
+                    <a href="{% url 'profile' post.author.username %}" 
+                       class="text-dark fw-bold text-decoration-none">
                         {{ post.author.username }}
                     </a>
 
-                    {% if post.author != request.user %}
-                        <div class="ms-auto">
+                    <div class="ms-auto">
+                        {% if post.author == request.user %}
+                            <a href="{% url 'delete_post' post.id %}" 
+                               class="btn btn-outline-danger btn-sm" 
+                               onclick="return confirm('确定要永久删除这张照片吗？')">
+                                <i class="bi bi-trash"></i> 删除
+                            </a>
+                        {% else %}
                             {% if post.author.id in following_ids %}
-                                <a href="{% url 'toggle_follow' post.author.id %}" class="btn btn-secondary btn-sm px-3">取消关注</a>
+                                <a href="{% url 'toggle_follow' post.author.id %}" 
+                                   class="btn btn-secondary btn-sm px-3">取消关注</a>
                             {% else %}
-                                <a href="{% url 'toggle_follow' post.author.id %}" class="btn btn-outline-primary btn-sm px-3">关注TA</a>
+                                <a href="{% url 'toggle_follow' post.author.id %}" 
+                                   class="btn btn-outline-primary btn-sm px-3">关注TA</a>
                             {% endif %}
-                        </div>
-                    {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
 
-                <img src="{{ post.image.url }}" class="card-img-top" alt="post image" style="max-height: 600px; object-fit: cover;">
+                <img src="{{ post.image.url }}" 
+                     class="card-img-top" 
+                     alt="post image" 
+                     style="max-height: 600px; object-fit: cover;">
 
                 <div class="card-body">
+                    
                     <div class="mb-2">
                         <a href="{% url 'toggle_like' post.id %}" class="text-decoration-none">
                             <span class="text-danger">❤</span> 
@@ -38,24 +52,30 @@
                     </div>
 
                     <p class="card-text mb-1">
-                        <a href="{% url 'profile' post.author.username %}" class="fw-bold text-dark text-decoration-none">
+                        <a href="{% url 'profile' post.author.username %}" 
+                           class="fw-bold text-dark text-decoration-none">
                             {{ post.author.username }}
                         </a> 
                         {{ post.caption }}
                     </p>
-                    <small class="text-muted d-block mb-3">{{ post.created_at|timesince }}前</small>
+                    <small class="text-muted d-block mb-3">
+                        {{ post.created_at|timesince }}前
+                    </small>
 
                     <hr class="my-3">
 
                     <div class="comments-section">
                         {% for comment in post.comments.all %}
-                            <div class="d-flex justify-content-between align-items-start mb-2" style="font-size: 0.95rem;">
+                            <div class="d-flex justify-content-between align-items-start mb-2" 
+                                 style="font-size: 0.95rem;">
+                                
                                 <div class="d-flex align-items-center">
                                     <img src="{{ comment.author.profile.avatar.url }}" 
                                          class="rounded-circle me-2" 
                                          style="width: 24px; height: 24px; object-fit: cover;">
                                     
-                                    <a href="{% url 'profile' comment.author.username %}" class="fw-bold text-dark text-decoration-none">
+                                    <a href="{% url 'profile' comment.author.username %}" 
+                                       class="fw-bold text-dark text-decoration-none">
                                         {{ comment.author.username }}
                                     </a>
                                     <span class="ms-2">{{ comment.content }}</span>
@@ -74,11 +94,17 @@
                         {% endfor %}
                     </div>
 
-                    <form action="{% url 'add_comment' post.id %}" method="POST" class="d-flex mt-3 border-top pt-2">
+                    <form action="{% url 'add_comment' post.id %}" 
+                          method="POST" 
+                          class="d-flex mt-3 border-top pt-2">
                         {% csrf_token %}
-                        <input type="text" name="content" class="form-control form-control-sm border-0 shadow-none" 
+                        <input type="text" name="content" 
+                               class="form-control form-control-sm border-0 shadow-none" 
                                placeholder="添加评论..." required>
-                        <button type="submit" class="btn btn-sm btn-link text-primary fw-bold text-decoration-none">发布</button>
+                        <button type="submit" 
+                                 class="btn btn-sm btn-link text-primary fw-bold text-decoration-none">
+                            发布
+                        </button>
                     </form>
                 </div>
             </div>
