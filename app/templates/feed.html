@@ -8,9 +8,13 @@
                 <span class="fw-bold">{{ post.author.username }}</span>
 
                 {% if post.author != request.user %}
-                    <a href="{% url 'toggle_follow' post.author.id %}" class="btn btn-sm btn-outline-primary">
-                        {% if request.user in post.author.followers.all %}取消关注{% else %}关注TA{% endif %}
-                    </a>
+                    <div class="ms-auto">
+                        {% if post.author.id in following_ids %}
+                            <a href="{% url 'toggle_follow' post.author.id %}" class="btn btn-secondary btn-sm">取消关注</a>
+                        {% else %}
+                            <a href="{% url 'toggle_follow' post.author.id %}" class="btn btn-outline-primary btn-sm">关注TA</a>
+                        {% endif %}
+                    </div>
                 {% endif %}
             </div>
             {% if post.image %}
