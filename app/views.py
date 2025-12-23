@@ -3,6 +3,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.db.models import Q
+from django.contrib.auth import logout
 from .models import Post, Like, Follow, User, Comment, Profile   
 from .forms import PostForm
 
@@ -29,6 +30,10 @@ def login_view(request):
     else:
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
 
 #核心展示（Feed 流）
 @login_required
