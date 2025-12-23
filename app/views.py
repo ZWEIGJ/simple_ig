@@ -123,3 +123,11 @@ def add_comment(request, post_id):
                 content=content
             )
     return redirect(request.META.get('HTTP_REFERER', 'feed'))
+
+@login_required
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    # 安全检查：只有评论作者可以删除
+    if comment.author == request.user:
+        comment.delete()
+    return redirect(request.META.get('HTTP_REFERER', 'feed'))
