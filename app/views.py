@@ -69,3 +69,20 @@ def toggle_follow(request, user_id):
         if not created:
             follow.delete() # 切换关注/取消关注 [cite: 238]
     return redirect('feed')
+
+#个人主页
+@login_required
+def profile(request, username):
+    # 查找该用户
+    user_profile = get_object_or_404(User, username=username)
+    # 抓取该用户的所有帖子，按时间倒序
+    user_posts = Post.objects.filter(author=user_profile).order_by('-created_at')
+    
+    context = {
+        'user_profile': user_profile,
+        'user_posts': user_posts,
+        'posts_count': user_posts.count(),
+        'followers_count': user_profile.followers.count(),
+        'following_count': user_profile.following.all().count(),
+    }
+    return render(request, 'profile.html', context)
