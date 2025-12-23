@@ -4,9 +4,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls), # 管理后台 
-    path('', include('app.urls')),   # 将所有请求交给 app 下的 urls.py 处理 
-] 
-
-# 允许在开发环境下通过 URL 访问上传的图片 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('admin/', admin.site.urls),
+    path('', include('app.urls')), # 核心：将根目录请求全部交给 app 路由处理
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
