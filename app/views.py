@@ -86,3 +86,10 @@ def profile(request, username):
         'following_count': user_profile.following.all().count(),
     }
     return render(request, 'profile.html', context)
+
+#探索广场
+@login_required
+def explore(request):
+    # 正确的方法名是 order_by
+    all_posts = Post.objects.all().order_by('-created_at') 
+    return render(request, 'explore.html', {'posts': all_posts})

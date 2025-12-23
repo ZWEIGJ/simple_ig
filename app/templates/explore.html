@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 class="mb-4">发现广场</h3>
+<div class="row">
+    {% for post in posts %}
+    <div class="col-md-4 mb-4">
+        <a href="{% url 'profile' post.author.username %}">
+            <div class="card shadow-sm h-100">
+                <img src="{{ post.image.url }}" class="card-img-top" 
+                     style="height: 250px; object-fit: cover;" alt="explore post">
+                <div class="card-footer bg-white border-0 py-1 text-center">
+                    <small class="text-muted">by {{ post.author.username }}</small>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% empty %}
+    <p class="text-center text-muted">目前还没有任何帖子。</p>
+    {% endfor %}
+</div>
+{% endblock %}
