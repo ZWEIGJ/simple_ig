@@ -1,56 +1,61 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container">
-    <div class="row align-items-center mb-5">
+<div class="container py-4">
+    <div class="row mb-5 align-items-center justify-content-center">
         <div class="col-md-4 text-center">
-            <img src="{{ user_profile.profile.avatar.url }}" 
-                 class="rounded-circle shadow-sm mb-3" 
-                 alt="profile avatar"
-                 style="width: 150px; height: 150px; object-fit: cover;">
+            <div class="position-relative d-inline-block">
+                <img src="{{ profile_user.profile.avatar.url }}" 
+                     class="rounded-circle shadow-sm border" 
+                     style="width: 160px; height: 160px; object-fit: cover; border: 4px solid #fff !important;">
+            </div>
         </div>
-        <div class="col-md-8">
-            <div class="d-flex align-items-center mb-3">
-                <h2 class="me-4 mb-0">{{ user_profile.username }}</h2>
+
+        <div class="col-md-6">
+            <div class="d-flex align-items-center mb-4 flex-wrap">
+                <h2 class="mb-0 me-4 fw-light" style="font-size: 1.8rem;">{{ profile_user.username }}</h2>
                 
-                {% if user.is_authenticated %}
-                    {% if user.id == user_profile.id %}
-                        <a href="{% url 'edit_profile' %}" class="btn btn-outline-dark btn-sm px-4 fw-bold">编辑资料</a>
+                {% if profile_user == request.user %}
+                    <a href="{% url 'edit_profile' %}" class="btn btn-outline-dark btn-sm fw-bold px-3">编辑个人资料</a>
+                {% else %}
+                    {% if profile_user.id in following_ids %}
+                        <a href="{% url 'toggle_follow' profile_user.id %}" class="btn btn-secondary btn-sm px-4">取消关注</a>
                     {% else %}
-                        {% if user_profile.id in following_ids %}
-                            <a href="{% url 'toggle_follow' user_profile.id %}" class="btn btn-secondary btn-sm px-4">取消关注</a>
-                        {% else %}
-                            <a href="{% url 'toggle_follow' user_profile.id %}" class="btn btn-primary btn-sm px-4">关注TA</a>
-                        {% endif %}
+                        <a href="{% url 'toggle_follow' profile_user.id %}" class="btn btn-primary btn-sm px-4">关注</a>
                     {% endif %}
                 {% endif %}
             </div>
 
-            <div class="d-flex mb-3">
-                <div class="me-5"><strong>{{ posts_count }}</strong> 帖子</div>
-                <div class="me-5"><strong>{{ followers_count }}</strong> 粉丝</div>
-                <div class="me-5"><strong>{{ following_count }}</strong> 关注</div>
+            <div class="d-flex mb-4">
+                <div class="me-5">
+                    <span class="fw-bold">{{ posts_count }}</span> <span class="text-muted">帖子</span>
+                </div>
+                <div class="me-5">
+                    <span class="fw-bold">{{ followers_count }}</span> <span class="text-muted">粉丝</span>
+                </div>
+                <div class="me-5">
+                    <span class="fw-bold">{{ following_count }}</span> <span class="text-muted">关注</span>
+                </div>
             </div>
-            
-            <p class="mb-0 fw-bold">{{ user_profile.username }}</p>
-            <p class="text-muted">Simple IG 摄影爱好者</p>
+
+            <div class="bio-section">
+                <p class="mb-0" style="white-space: pre-wrap;">{{ profile_user.profile.bio|default:"✨ 还没有填写个性签名" }}</p>
+            </div>
         </div>
     </div>
 
-    <hr class="mb-5">
+    <hr class="my-5">
 
-    <div class="row">
-        {% for post in user_posts %}
-            <div class="col-md-4 mb-4">
-                <div class="card border-0 shadow-sm overflow-hidden">
-                    <img src="{{ post.image.url }}" 
-                         class="card-img-top" 
-                         style="height: 300px; object-fit: cover;" 
-                         alt="user post">
+    <div class="row g-4">
+        {% for post in posts %}
+            <div class="col-4 col-md-4">
+                <div class="ratio ratio-1x1 shadow-sm overflow-hidden" style="border-radius: 8px;">
+                    <img src="{{ post.image.url }}" class="img-fluid object-fit-cover w-100 h-100" alt="post">
                 </div>
             </div>
         {% empty %}
             <div class="col-12 text-center py-5">
-                <p class="text-muted">还没有发布过帖子。</p>
+                <i class="bi bi-camera text-muted" style="font-size: 3rem;"></i>
+                <p class="text-muted mt-3">还没有发布过任何帖子</p>
             </div>
         {% endfor %}
     </div>

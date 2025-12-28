@@ -44,3 +44,15 @@ class Profile(models.Model):
 
     def __str__(self):
         return f'{self.user.username} Profile'
+    
+
+# app/models.py
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    avatar = models.ImageField(upload_to='avatars/', default='avatars/default.jpg')
+    # 新增：个性签名，限制 150 字，允许为空
+    bio = models.TextField(max_length=150, blank=True, verbose_name="个性签名")
+
+    def __str__(self):
+        return f'{self.user.username} Profile'

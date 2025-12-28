@@ -2,16 +2,29 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-6">
-        <div class="card shadow-sm p-4">
-            <h3 class="mb-4">编辑个人资料</h3>
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label class="form-label">上传新头像</label>
-                    <input type="file" name="avatar" class="form-control" accept="image/*">
-                </div>
-                <button type="submit" class="btn btn-primary w-100">保存修改</button>
-            </form>
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h3 class="mb-4 fw-bold">编辑个人资料</h3>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4 text-center">
+                        <img src="{{ user.profile.avatar.url }}" class="rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #eee;">
+                        <input type="file" name="avatar" class="form-control form-control-sm">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">个性签名</label>
+                        <textarea name="bio" class="form-control" rows="3" placeholder="写点什么介绍你自己吧...">{{ user.profile.bio }}</textarea>
+                        <div class="form-text">最多 150 个字。</div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">保存修改</button>
+                        <a href="{% url 'profile' user.username %}" class="btn btn-light">取消</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

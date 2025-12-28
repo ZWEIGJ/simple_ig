@@ -87,19 +87,26 @@ def toggle_follow(request, user_id):
 #个人主页
 @login_required
 def profile(request, username):
-    user_profile = get_object_or_404(User, username=username)
-    user_posts = Post.objects.filter(author=user_profile).order_by('-created_at')
+    # 找到正在查看的那个用户
+    profile_user = get_object_or_404(User, username=username)
+    posts = Post.objects.filter(author=profile_user).order_by('-created_at')
     
-    # 获取当前用户的关注列表，用于判断按钮状态
-    following_ids = Follow.objects.filter(follower=request.user).values_list('followed_id', flat=True)
+    # 统计数据
+    posts_count = posts.count()
+    followers_count = Follow.objects.filter(followed=profile_user).count()
+    following_count = Follow.objects.filter(follower=profile_user).count()
     
+    # 当前登录用户关注的人的 ID 列表 (用于判断显示“关注”还是“取消关注”)
+    following_ids = []
+    if request.user.is_authenticated:
+        following_ids = Follow.objects.filter(follower=request.user).values_list('followed_id', flat=True)
+
     context = {
-        'user_profile': user_profile,
-        'user_posts': user_posts,
-        'posts_count': user_posts.count(),
-        # 修复报错：改回 .followers (Django 默认名称)
-        'followers_count': user_profile.followers.count(), 
-        'following_count': user_profile.following.count(),
+        'profile_user': profile_user, # 确保这里的 key 是 profile_user
+        'posts': posts,
+        'posts_count': posts_count,
+        'followers_count': followers_count,
+        'following_count': following_count,
         'following_ids': following_ids,
     }
     return render(request, 'profile.html', context)
@@ -140,17 +147,21 @@ def delete_comment(request, comment_id):
 # 编辑个人资料（头像等）
 @login_required
 def edit_profile(request):
-    # 使用 get_or_create 确保如果老用户没 Profile，就立刻新建一个
-    profile, created = Profile.objects.get_or_create(user=request.user)
-    
     if request.method == 'POST':
+        # 获取表单数据
+        bio = request.POST.get('bio')
         avatar = request.FILES.get('avatar')
+        
+        # 更新 Profile 实例
+        profile = request.user.profile
+        profile.bio = bio
         if avatar:
             profile.avatar = avatar
-            profile.save()
-            return redirect('profile', username=request.user.username)
-            
-    return render(request, 'edit_profile.html', {'profile': profile})
+        profile.save()
+        
+        return redirect('profile', username=request.user.username)
+    
+    return render(request, 'edit_profile.html')
 
 # 删除帖子
 @login_required
