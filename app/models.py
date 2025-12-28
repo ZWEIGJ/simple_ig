@@ -46,7 +46,6 @@ class Profile(models.Model):
         return f'{self.user.username} Profile'
     
 
-# app/models.py
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -56,3 +55,20 @@ class Profile(models.Model):
 
     def __str__(self):
         return f'{self.user.username} Profile'
+    
+
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+# 当 User 模型保存后，触发这个函数
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        # 如果是新创建的用户，则创建 Profile
+        Profile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    # 确保每次保存 User 时，Profile 也会被保存
+    instance.profile.save()

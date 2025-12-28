@@ -147,18 +147,17 @@ def delete_comment(request, comment_id):
 # 编辑个人资料（头像等）
 @login_required
 def edit_profile(request):
+    # 使用 get_or_create 避免报错
+    profile, created = Profile.objects.get_or_create(user=request.user)
+    
     if request.method == 'POST':
-        # 获取表单数据
         bio = request.POST.get('bio')
         avatar = request.FILES.get('avatar')
         
-        # 更新 Profile 实例
-        profile = request.user.profile
         profile.bio = bio
         if avatar:
             profile.avatar = avatar
         profile.save()
-        
         return redirect('profile', username=request.user.username)
     
     return render(request, 'edit_profile.html')
