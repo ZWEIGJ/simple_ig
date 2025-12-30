@@ -1,5 +1,276 @@
 {% extends 'base.html' %}
 {% block content %}
+<style>
+    /* 在原有内容基础上添加美化样式 */
+    .row {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+    }
+    
+    .card {
+        border: none;
+        border-radius: 25px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+    
+    .card:hover {
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
+        transform: translateY(-5px);
+    }
+    
+    .shadow-sm {
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08) !important;
+    }
+    
+    .border-0 {
+        border: none;
+    }
+    
+    .card-body {
+        padding: 2.5rem;
+    }
+    
+    h3 {
+        text-align: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 600;
+        font-size: 2rem;
+        margin-bottom: 2rem !important;
+        position: relative;
+        padding-bottom: 15px;
+    }
+    
+    h3::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 2px;
+    }
+    
+    form {
+        margin-top: 1rem;
+    }
+    
+    /* 头像区域美化 */
+    .text-center {
+        position: relative;
+    }
+    
+    .rounded-circle {
+        border: 4px solid #fff !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .rounded-circle:hover {
+        transform: scale(1.05);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* 文件上传美化 */
+    .form-control-sm {
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 10px 15px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        background: white;
+    }
+    
+    .form-control-sm:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    input[type="file"] {
+        position: relative;
+        cursor: pointer;
+    }
+    
+    input[type="file"]::file-selector-button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    input[type="file"]::file-selector-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+    
+    /* 表单标签美化 */
+    .form-label {
+        color: #2d3748;
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 0.8rem;
+        display: block;
+    }
+    
+    .fw-bold {
+        font-weight: 600;
+    }
+    
+    /* 文本区域美化 */
+    .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+        min-height: 120px;
+    }
+    
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        outline: none;
+    }
+    
+    textarea {
+        resize: vertical;
+    }
+    
+    /* 占位符样式 */
+    ::placeholder {
+        color: #9ca3af;
+    }
+    
+    /* 表单文本美化 */
+    .form-text {
+        color: #6b7280;
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+        font-style: italic;
+    }
+    
+    /* 按钮美化 */
+    .d-grid {
+        margin-top: 2rem;
+    }
+    
+    .gap-2 {
+        gap: 1rem !important;
+    }
+    
+    .btn {
+        border-radius: 12px;
+        font-weight: 500;
+        padding: 12px 24px;
+        transition: all 0.3s ease;
+        border: none;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+    
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+    }
+    
+    .btn-light {
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+        color: #4b5563;
+        border: 2px solid #e5e7eb;
+    }
+    
+    .btn-light:hover {
+        background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        color: #374151;
+    }
+    
+    /* 头像编辑图标 */
+    .avatar-container {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .avatar-container::after {
+        content: '📷 点击更换头像';
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(102, 126, 234, 0.9);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        opacity: 0;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+    }
+    
+    .avatar-container:hover::after {
+        opacity: 1;
+        transform: translateX(-50%) translateY(-5px);
+    }
+    
+    /* 字符计数器 */
+    .char-counter {
+        text-align: right;
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-top: 0.5rem;
+    }
+    
+    .char-counter.warning {
+        color: #f59e0b;
+    }
+    
+    .char-counter.danger {
+        color: #ef4444;
+    }
+    
+    /* 响应式调整 */
+    @media (max-width: 768px) {
+        .col-md-6 {
+            padding: 0 15px;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem !important;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+        }
+    }
+</style>
+
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card shadow-sm border-0">
@@ -9,14 +280,17 @@
                     {% csrf_token %}
                     
                     <div class="mb-4 text-center">
-                        <img src="{{ user.profile.avatar.url }}" class="rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #eee;">
-                        <input type="file" name="avatar" class="form-control form-control-sm">
+                        <div class="avatar-container">
+                            <img src="{{ user.profile.avatar.url }}" class="rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #eee;">
+                        </div>
+                        <input type="file" name="avatar" class="form-control form-control-sm" id="avatarInput">
                     </div>
 
                     <div class="mb-4">
                         <label class="form-label fw-bold">个性签名</label>
-                        <textarea name="bio" class="form-control" rows="3" placeholder="写点什么介绍你自己吧...">{{ user.profile.bio }}</textarea>
+                        <textarea name="bio" class="form-control" rows="3" placeholder="写点什么介绍你自己吧..." id="bioTextarea">{{ user.profile.bio }}</textarea>
                         <div class="form-text">最多 150 个字。</div>
+                        <div class="char-counter" id="charCounter">0/150</div>
                     </div>
 
                     <div class="d-grid gap-2">
@@ -28,4 +302,115 @@
         </div>
     </div>
 </div>
+
+<script>
+    // 添加交互效果
+    document.addEventListener('DOMContentLoaded', function() {
+        // 头像点击触发文件选择
+        const avatarImg = document.querySelector('.rounded-circle');
+        const avatarInput = document.getElementById('avatarInput');
+        
+        if (avatarImg && avatarInput) {
+            avatarImg.addEventListener('click', function() {
+                avatarInput.click();
+            });
+            
+            // 头像预览功能
+            avatarInput.addEventListener('change', function(e) {
+                if (e.target.files && e.target.files[0]) {
+                    const file = e.target.files[0];
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            avatarImg.src = e.target.result;
+                            avatarImg.style.transform = 'scale(1.1)';
+                            setTimeout(() => {
+                                avatarImg.style.transform = 'scale(1)';
+                            }, 300);
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                }
+            });
+        }
+        
+        // 个性签名字符计数器
+        const bioTextarea = document.getElementById('bioTextarea');
+        const charCounter = document.getElementById('charCounter');
+        
+        if (bioTextarea && charCounter) {
+            // 初始化计数器
+            updateCharCounter();
+            
+            // 监听输入
+            bioTextarea.addEventListener('input', updateCharCounter);
+            
+            function updateCharCounter() {
+                const length = bioTextarea.value.length;
+                charCounter.textContent = `${length}/150`;
+                
+                // 根据字数改变颜色
+                if (length > 140) {
+                    charCounter.className = 'char-counter warning';
+                } else if (length > 150) {
+                    charCounter.className = 'char-counter danger';
+                } else {
+                    charCounter.className = 'char-counter';
+                }
+            }
+            
+            // 限制最大字符数
+            bioTextarea.addEventListener('input', function() {
+                if (this.value.length > 150) {
+                    this.value = this.value.substring(0, 150);
+                    updateCharCounter();
+                }
+            });
+        }
+        
+        // 按钮动画效果
+        const buttons = document.querySelectorAll('.btn');
+        buttons.forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-3px)';
+            });
+            
+            btn.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+            
+            btn.addEventListener('mousedown', function() {
+                this.style.transform = 'scale(0.98)';
+            });
+            
+            btn.addEventListener('mouseup', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+        
+        // 表单提交动画
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                const submitBtn = this.querySelector('button[type="submit"]');
+                if (submitBtn) {
+                    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>保存中...';
+                    submitBtn.disabled = true;
+                }
+            });
+        }
+        
+        // 输入框焦点效果
+        const inputs = document.querySelectorAll('.form-control, .form-control-sm');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-2px)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateY(0)';
+            });
+        });
+    });
+</script>
 {% endblock %}
