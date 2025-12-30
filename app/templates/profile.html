@@ -1,5 +1,87 @@
 {% extends 'base.html' %}
 {% block content %}
+<style>
+    /* 只美化指定按钮的样式 */
+    .btn-outline-dark {
+        border: 2px solid #6366f1;
+        color: #6366f1;
+        background: white;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+    
+    .btn-outline-dark:hover {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        border-color: transparent;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        border: none;
+        padding: 8px 24px;
+        border-radius: 20px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    }
+    
+    .btn-secondary {
+        background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+        border: none;
+        padding: 8px 24px;
+        border-radius: 20px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(107, 114, 128, 0.4);
+        background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+    }
+    
+    /* 统计数字美化 */
+    .d-flex.mb-4 > div {
+        position: relative;
+        padding: 8px 20px;
+        transition: all 0.3s ease;
+    }
+    
+    .d-flex.mb-4 > div:hover {
+        transform: translateY(-2px);
+    }
+    
+    .d-flex.mb-4 > div .fw-bold {
+        font-size: 1.4rem;
+        color: #6366f1;
+        transition: all 0.3s ease;
+    }
+    
+    .d-flex.mb-4 > div:hover .fw-bold {
+        color: #8b5cf6;
+    }
+    
+    .d-flex.mb-4 > div .text-muted {
+        color: #6b7280;
+        transition: all 0.3s ease;
+    }
+    
+    .d-flex.mb-4 > div:hover .text-muted {
+        color: #374151;
+    }
+</style>
+
 <div class="container py-4">
     <div class="row mb-5 align-items-center justify-content-center">
         <div class="col-md-4 text-center">
@@ -60,4 +142,21 @@
         {% endfor %}
     </div>
 </div>
+
+<script>
+    // 为统计数字添加简单的悬停效果
+    document.addEventListener('DOMContentLoaded', function() {
+        const statsItems = document.querySelectorAll('.d-flex.mb-4 > div');
+        
+        statsItems.forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-3px)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    });
+</script>
 {% endblock %}
