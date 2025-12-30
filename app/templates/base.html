@@ -11,51 +11,268 @@
     <style>
         body {
             font-family: 'Noto Sans SC', sans-serif;
-            background-color: #fafafa;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.8) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.6) 0%, transparent 50%);
+            z-index: -1;
         }
 
         /* Instagram 风格渐变导航栏 */
         .navbar-instagram {
             background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important;
-            padding: 0.5rem 0;
+            padding: 0.8rem 0;
+            box-shadow: 0 4px 20px rgba(188, 24, 136, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .navbar-instagram::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
 
         /* Logo 字体特殊处理 */
         .navbar-brand {
             font-family: 'Lobster', cursive;
-            font-size: 1.8rem !important;
-            letter-spacing: 1px;
+            font-size: 2rem !important;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, #fff 0%, #ffeaea 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.05);
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar-brand::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(45deg, #fff 0%, #ffeaea 100%);
+            transition: width 0.3s ease;
+        }
+
+        .navbar-brand:hover::after {
+            width: 100%;
         }
 
         .navbar-avatar {
-            width: 32px;
-            height: 32px;
+            width: 38px;
+            height: 38px;
             object-fit: cover;
             border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .navbar-avatar:hover {
+            transform: scale(1.1);
+            border-color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         .nav-link-custom {
-            color: rgba(255, 255, 255, 0.9) !important;
-            font-weight: 500;
-            transition: all 0.2s;
+            color: rgba(255, 255, 255, 0.95) !important;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 1rem !important;
+            border-radius: 25px;
+            margin: 0 0.3rem;
         }
 
         .nav-link-custom:hover {
             color: #fff !important;
-            transform: scale(1.05);
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-link-custom i {
+            font-size: 1.2rem;
+            margin-right: 0.3rem;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link-custom:hover i {
+            transform: scale(1.2);
         }
 
         .btn-publish {
-            background-color: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.3) 100%);
+            border: 2px solid rgba(255, 255, 255, 0.6);
             color: white !important;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
+            border-radius: 25px;
+            padding: 0.5rem 1.5rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-publish::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s ease;
         }
 
         .btn-publish:hover {
-            background-color: rgba(255, 255, 255, 0.3);
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.4) 100%);
             border-color: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-publish:hover::before {
+            left: 100%;
+        }
+
+        .btn-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            transition: all 0.3s ease;
+            border-radius: 20px;
+            padding: 0.4rem 1rem;
+        }
+
+        .btn-link:hover {
+            color: #fff !important;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* 容器美化 */
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .bg-light {
+            background: transparent !important;
+        }
+
+        /* 导航栏容器美化 */
+        .navbar > .container {
+            padding: 0 1rem;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .navbar-nav {
+                align-items: center;
+                padding: 1rem 0;
+            }
+            
+            .nav-link-custom {
+                margin: 0.2rem 0;
+                text-align: center;
+            }
+            
+            .btn-publish {
+                margin: 0.5rem 0;
+            }
+            
+            .navbar-brand {
+                font-size: 1.6rem !important;
+            }
+        }
+
+        /* 加载动画 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* 滚动条美化 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #f09433 0%, #bc1888 100%);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, #e6683c 0%, #cc2366 100%);
+        }
+
+        /* 页面内容区域美化 */
+        .container > * {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        /* 导航栏图标动画 */
+        .navbar-nav .nav-item {
+            position: relative;
+        }
+
+        .navbar-nav .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .navbar-nav .nav-item:hover::after {
+            width: 80%;
         }
     </style>
 </head>
@@ -75,9 +292,7 @@
                     </a>
                     
                     <a class="nav-link p-0 me-3" href="{% url 'profile' user.username %}" title="个人主页">
-                        <img src="{{ user.profile.avatar.url }}" 
-                             alt="{{ user.username }}" 
-                             class="navbar-avatar">
+                        
                     </a>
 
                     <a class="nav-link btn btn-link text-white-50 text-decoration-none btn-sm" href="{% url 'logout' %}">退出</a>
@@ -94,5 +309,83 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // 添加交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 导航栏链接动画
+            const navLinks = document.querySelectorAll('.nav-link-custom, .btn-link');
+            navLinks.forEach(link => {
+                link.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-3px)';
+                });
+                
+                link.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // 发布按钮特殊效果
+            const publishBtn = document.querySelector('.btn-publish');
+            if (publishBtn) {
+                publishBtn.addEventListener('click', function(e) {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 200);
+                });
+            }
+
+            // 头像点击效果
+            const avatar = document.querySelector('.navbar-avatar');
+            if (avatar) {
+                avatar.addEventListener('click', function(e) {
+                    this.style.transform = 'scale(1.2) rotate(5deg)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1) rotate(0deg)';
+                    }, 300);
+                });
+            }
+
+            // 页面加载动画
+            const container = document.querySelector('.container');
+            if (container) {
+                container.style.opacity = '0';
+                container.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    container.style.transition = 'all 0.6s ease-out';
+                    container.style.opacity = '1';
+                    container.style.transform = 'translateY(0)';
+                }, 100);
+            }
+
+            // 导航栏背景动画
+            const navbar = document.querySelector('.navbar-instagram');
+            if (navbar) {
+                let mouseX = 0;
+                let mouseY = 0;
+                
+                document.addEventListener('mousemove', function(e) {
+                    mouseX = (e.clientX / window.innerWidth) * 100;
+                    mouseY = (e.clientY / window.innerHeight) * 100;
+                    
+                    navbar.style.background = `
+                        linear-gradient(45deg, 
+                            #f09433 0%, 
+                            #e6683c 25%, 
+                            #dc2743 50%, 
+                            #cc2366 75%, 
+                            #bc1888 100%
+                        ),
+                        radial-gradient(circle at ${mouseX}% ${mouseY}%, 
+                            rgba(255, 255, 255, 0.3) 0%, 
+                            transparent 50%
+                        )
+                    `;
+                });
+            }
+        });
+    </script>
 </body>
 </html>
