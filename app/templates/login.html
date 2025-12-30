@@ -1,6 +1,354 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<style>
+    /* 在原有内容基础上添加美化样式 */
+    .row {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+    }
+    
+    .card {
+        border: none;
+        border-radius: 25px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2, #f09433);
+        background-size: 200% 100%;
+        animation: gradientMove 3s ease infinite;
+    }
+    
+    @keyframes gradientMove {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    .card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+    }
+    
+    .shadow-lg {
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    .border-0 {
+        border: none;
+    }
+    
+    .rounded-3 {
+        border-radius: 20px !important;
+    }
+    
+    .rounded-top-3 {
+        border-radius: 20px 20px 0 0 !important;
+    }
+    
+    /* 卡片头部美化 */
+    .card-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        border: none;
+        padding: 2rem 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .card-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transform: rotate(45deg);
+        animation: shine 3s infinite;
+    }
+    
+    @keyframes shine {
+        0% { transform: translateX(-100%) rotate(45deg); }
+        100% { transform: translateX(100%) rotate(45deg); }
+    }
+    
+    .bg-primary {
+        background: transparent !important;
+    }
+    
+    .text-white {
+        color: white !important;
+    }
+    
+    h3 {
+        font-size: 1.8rem;
+        font-weight: 600;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        position: relative;
+        z-index: 2;
+    }
+    
+    /* 卡片主体美化 */
+    .card-body {
+        padding: 2.5rem;
+    }
+    
+    /* 修复表单样式 - 使用普通表单而不是浮动标签 */
+    .form-group {
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+    
+    .form-label {
+        display: block;
+        color: #2d3748;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        outline: none;
+        transform: translateY(-2px);
+    }
+    
+    /* 错误信息美化 */
+    .invalid-feedback {
+        color: #ef4444;
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: #fef2f2;
+        border-radius: 8px;
+        border-left: 3px solid #ef4444;
+        display: block;
+    }
+    
+    /* 帮助文本美化 */
+    .form-text {
+        color: #6b7280;
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+        font-style: italic;
+        display: block;
+    }
+    
+    /* 记住我选项美化 */
+    .form-check {
+        margin: 1.5rem 0;
+        padding: 0.8rem 1rem;
+        background: #f8f9fa;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+    
+    .form-check:hover {
+        background: #e9ecef;
+        transform: translateX(5px);
+    }
+    
+    .form-check-input {
+        width: 1.2em;
+        height: 1.2em;
+        margin-right: 0.8rem;
+        border: 2px solid #dee2e6;
+    }
+    
+    .form-check-input:checked {
+        background-color: #667eea;
+        border-color: #667eea;
+    }
+    
+    .form-check-label {
+        color: #374151;
+        font-weight: 500;
+        cursor: pointer;
+    }
+    
+    /* 提交按钮美化 */
+    .btn {
+        border-radius: 15px;
+        font-weight: 600;
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        border: none;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        background: linear-gradient(135deg, #5a6fd8 0%, #6a42a5 100%);
+    }
+    
+    .btn-lg {
+        padding: 1.2rem 2rem;
+    }
+    
+    .w-100 {
+        width: 100%;
+    }
+    
+    .py-2 {
+        padding-top: 0.8rem !important;
+        padding-bottom: 0.8rem !important;
+    }
+    
+    .fw-bold {
+        font-weight: 600;
+    }
+    
+    /* 分隔线美化 */
+    .text-center.my-3 {
+        margin: 2rem 0;
+        position: relative;
+    }
+    
+    .text-center.my-3::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
+    }
+    
+    .text-muted {
+        background: white;
+        padding: 0 1rem;
+        color: #6b7280 !important;
+        position: relative;
+        z-index: 2;
+    }
+    
+    /* 底部链接美化 */
+    .text-center p {
+        margin-bottom: 0.5rem;
+        color: #6b7280;
+    }
+    
+    .text-decoration-none {
+        color: #667eea;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    
+    .text-decoration-none:hover {
+        color: #764ba2;
+        transform: translateX(5px);
+    }
+    
+    .text-decoration-none::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #667eea;
+        transition: width 0.3s ease;
+    }
+    
+    .text-decoration-none:hover::after {
+        width: 100%;
+    }
+    
+    .small {
+        font-size: 0.9rem;
+        color: #9ca3af;
+        transition: all 0.3s ease;
+    }
+    
+    .small:hover {
+        color: #667eea;
+    }
+    
+    .d-block {
+        display: block;
+    }
+    
+    .mt-2 {
+        margin-top: 0.8rem !important;
+    }
+    
+    /* 图标美化 */
+    .fas {
+        font-size: 1.1em;
+        transition: transform 0.3s ease;
+    }
+    
+    .btn:hover .fas {
+        transform: scale(1.2);
+    }
+    
+    .me-2 {
+        margin-right: 0.5rem !important;
+    }
+    
+    /* 响应式调整 */
+    @media (max-width: 768px) {
+        .col-md-5 {
+            padding: 0 15px;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .card-header {
+            padding: 1.5rem 1.5rem;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+        }
+        
+        .btn {
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+        }
+        
+        .form-control {
+            padding: 10px 14px;
+        }
+    }
+</style>
+
 <div class="row justify-content-center mt-5">
     <div class="col-md-5 col-lg-4">
         <div class="card shadow-lg border-0 rounded-3">
@@ -17,11 +365,10 @@
                 <form method="post" novalidate>
                     {% csrf_token %}
                     
-                    <!-- 表单字段美化 -->
+                    <!-- 修复的表单字段 - 使用普通表单布局 -->
                     <div class="mb-3">
                         {% for field in form %}
-                        <div class="form-floating mb-3">
-                            {{ field }}
+                        <div class="form-group">
                             <label for="{{ field.id_for_label }}" class="form-label">
                                 {% if field.name == 'username' %}用户名{% endif %}
                                 {% if field.name == 'email' %}邮箱地址{% endif %}
@@ -29,13 +376,36 @@
                                 {% if field.name == 'password1' %}密码{% endif %}
                                 {% if field.name == 'password2' %}确认密码{% endif %}
                             </label>
+                            {{ field }}
                             {% if field.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ field.errors.0 }}
+                            <div class="invalid-feedback">
+                                {% for error in field.errors %}
+                                    {{ error }}
+                                {% endfor %}
                             </div>
                             {% endif %}
                             {% if field.help_text %}
-                            <div class="form-text">{{ field.help_text }}</div>
+                            <div class="form-text">
+                                {% if field.help_text == "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only." %}
+                                    必填。150个字符以内。只能包含字母、数字和@/./+/-/_。
+                                {% elif field.help_text == "Your password can't be too similar to your other personal information." %}
+                                    密码不能与其他个人信息过于相似。
+                                {% elif field.help_text == "Your password must contain at least 8 characters." %}
+                                    密码至少包含8个字符。
+                                {% elif field.help_text == "Your password can't be a commonly used password." %}
+                                    密码不能是常用密码。
+                                {% elif field.help_text == "Your password can't be entirely numeric." %}
+                                    密码不能全是数字。
+                                {% elif field.help_text == "The two password fields didn't match." %}
+                                    两次输入的密码不匹配。
+                                {% elif field.help_text == "Enter the same password as before, for verification." %}
+                                    请输入相同的密码进行验证。
+                                {% elif field.help_text == "Enter a valid email address." %}
+                                    请输入有效的邮箱地址。
+                                {% else %}
+                                    {{ field.help_text }}
+                                {% endif %}
+                            </div>
                             {% endif %}
                         </div>
                         {% endfor %}
@@ -81,36 +451,102 @@
     </div>
 </div>
 
-<style>
-    .form-floating input {
-        border-radius: 0.5rem;
-        border: 2px solid #e9ecef;
-        transition: all 0.3s ease;
-    }
-    
-    .form-floating input:focus {
-        border-color: #0d6efd;
-        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
-    }
-    
-    .card {
-        transition: transform 0.3s ease;
-    }
-    
-    .card:hover {
-        transform: translateY(-5px);
-    }
-    
-    .btn-primary {
-        background: linear-gradient(45deg, #0d6efd, #0dcaf0);
-        border: none;
-        border-radius: 0.5rem;
-        transition: all 0.3s ease;
-    }
-    
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
-    }
-</style>
+<script>
+    // 添加交互效果
+    document.addEventListener('DOMContentLoaded', function() {
+        // 输入框动画效果
+        const inputs = document.querySelectorAll('.form-control');
+        inputs.forEach(input => {
+            // 设置输入框的placeholder
+            if (input.type === 'text' || input.type === 'email' || input.type === 'password') {
+                if (input.name.includes('username')) {
+                    input.placeholder = '请输入用户名';
+                } else if (input.name.includes('email')) {
+                    input.placeholder = '请输入邮箱地址';
+                } else if (input.name.includes('password')) {
+                    if (input.name.includes('password1') || input.name === 'password') {
+                        input.placeholder = '请输入密码';
+                    } else if (input.name.includes('password2')) {
+                        input.placeholder = '请再次输入密码';
+                    }
+                }
+            }
+            
+            input.addEventListener('focus', function() {
+                this.style.transform = 'translateY(-2px)';
+                this.parentElement.style.transform = 'translateY(-2px)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.style.transform = 'translateY(0)';
+                this.parentElement.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // 按钮点击效果
+        const submitBtn = document.querySelector('.btn-primary');
+        if (submitBtn) {
+            submitBtn.addEventListener('click', function(e) {
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 200);
+            });
+        }
+        
+        // 链接悬停效果
+        const links = document.querySelectorAll('.text-decoration-none');
+        links.forEach(link => {
+            link.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateX(3px)';
+            });
+            
+            link.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0)';
+            });
+        });
+        
+        // 卡片加载动画
+        const card = document.querySelector('.card');
+        if (card) {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            
+            setTimeout(() => {
+                card.style.transition = 'all 0.6s ease-out';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100);
+        }
+        
+        // 自动翻译错误信息
+        function translateErrorMessages() {
+            const errorElements = document.querySelectorAll('.invalid-feedback');
+            errorElements.forEach(element => {
+                const text = element.textContent.trim();
+                const translations = {
+                    'This field is required.': '此字段是必填的。',
+                    'Enter a valid username. This value may contain only letters, numbers, and @/./+/-/_ characters.': 
+                        '请输入有效的用户名。只能包含字母、数字和@/./+/-/_字符。',
+                    'A user with that username already exists.': '该用户名已被使用。',
+                    'Enter a valid email address.': '请输入有效的邮箱地址。',
+                    'The two password fields didn\'t match.': '两次输入的密码不匹配。',
+                    'This password is too short. It must contain at least 8 characters.': 
+                        '密码太短，至少需要8个字符。',
+                    'This password is too common.': '密码太常见了。',
+                    'This password is entirely numeric.': '密码不能全是数字。',
+                    'The password is too similar to the username.': '密码与用户名太相似。',
+                    'The password is too similar to the email.': '密码与邮箱太相似。'
+                };
+                
+                if (translations[text]) {
+                    element.textContent = translations[text];
+                }
+            });
+        }
+        
+        // 延迟执行翻译
+        setTimeout(translateErrorMessages, 100);
+    });
+</script>
 {% endblock %}
